@@ -4,14 +4,6 @@ from django.db.models import Count
 from itertools import chain
 
 
-def get_likes_count(post):
-    return post.post_likes
-
-
-def get_related_posts_count(tag):
-    return tag.posts.count()
-
-
 def serialize_post(post):
     return {
         'title': post.title,
