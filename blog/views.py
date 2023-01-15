@@ -44,8 +44,7 @@ def index(request):
     fresh_posts = Post.objects.fresh()
     posts_ids = [post.id for post in fresh_posts]
 
-    popular_posts = Post.objects.popular().prefetch_related('author')[:5].fetch_with_comments_count(posts_ids)
-
+    popular_posts = Post.objects.popular().prefetch_related('author').prefetch_related('tags')[:5]
 
     most_fresh_posts = list(fresh_posts)[-5:]
     most_popular_posts = popular_posts[:5]
