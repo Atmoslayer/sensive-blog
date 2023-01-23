@@ -102,9 +102,9 @@ def post_detail(request, slug):
         'tags': [serialize_tag(tag) for tag in related_tags],
     }
 
-    most_popular_tags = Tag.objects.popular()[:5]
+    most_popular_posts = Post.objects.popular().prefetch_related('author').prefetch_related('tags')[:5]
 
-    most_popular_posts = []  # TODO. Как это посчитать?
+    most_popular_tags = Tag.objects.popular()[:5]
 
     context = {
         'post': serialized_post,
@@ -119,9 +119,10 @@ def post_detail(request, slug):
 def tag_filter(request, tag_title):
     tag = Tag.objects.get(title=tag_title)
 
+    most_popular_posts = Post.objects.popular().prefetch_related('author').prefetch_related('tags')[:5]
+
     most_popular_tags = Tag.objects.popular()[:5]
 
-    most_popular_posts = []  # TODO. Как это посчитать?
 
     related_posts = tag.posts.all()[:20]
 
