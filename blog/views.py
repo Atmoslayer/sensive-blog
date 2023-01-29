@@ -42,7 +42,7 @@ def serialize_tag(tag):
 def serialize_tag_optimized(tag):
     return {
         'title': tag.title,
-        'posts_with_tag': tag.posts_count
+        'posts_with_tag': tag.tag_posts
     }
 
 
@@ -55,9 +55,7 @@ def index(request):
     most_fresh_posts = list(fresh_posts)[-5:]
     most_popular_posts = popular_posts[:5]
 
-    most_popular_tags = Tag.objects.popular()[:5].prefetch_related(Prefetch('posts')).annotate(
-        posts_count=Count('posts', distinct=True)
-    )
+    most_popular_tags = Tag.objects.popular()[:5]
 
     context = {
         'most_popular_posts': [
