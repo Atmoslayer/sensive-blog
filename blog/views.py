@@ -48,7 +48,7 @@ def serialize_tag_optimized(tag):
 
 def index(request):
 
-    fresh_posts = Post.objects.fresh().fetch_with_comments_count()
+    fresh_posts = Post.objects.fresh().prefetch_related('author').prefetch_related('tags').fetch_with_comments_count()
 
     popular_posts = Post.objects.popular().prefetch_related('author').prefetch_related('tags').fetch_with_comments_count()
 
