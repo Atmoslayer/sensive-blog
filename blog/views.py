@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 
 
 def serialize_post_optimized(post):
-    post_tags = post.tags.all().popular()
+    post_tags = post.tags.all()
     return {
         'title': post.title,
         'teaser_text': post.text[:200],
@@ -89,11 +89,11 @@ def post_detail(request, slug):
 def tag_filter(request, tag_title):
     tag = get_object_or_404(Tag, title=tag_title)
 
-    most_popular_posts = Post.objects.popular().select_related('author').prefetch_related('tags').fetch_with_comments_count()[:5]
+    most_popular_posts = Post.objects.popular().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()[:5]
 
     most_popular_tags = Tag.objects.popular()[:5]
 
-    related_posts = tag.posts.all().select_related('author').fetch_with_comments_count()[:20]
+    related_posts = tag.posts.all().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()[:20]
 
 
     context = {
