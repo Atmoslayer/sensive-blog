@@ -28,9 +28,9 @@ def tag_optimized(tag):
 
 def index(request):
 
-    fresh_posts = Post.objects.fresh().select_related('author').prefetch_related('tags').fetch_with_comments_count()
+    fresh_posts = Post.objects.fresh().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()
 
-    popular_posts = Post.objects.popular().select_related('author').prefetch_related('tags').fetch_with_comments_count()
+    popular_posts = Post.objects.popular().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()
 
     most_fresh_posts = list(fresh_posts)[-5:]
     most_popular_posts = popular_posts[:5]
@@ -72,7 +72,7 @@ def post_detail(request, slug):
         'tags': [tag_optimized(tag) for tag in related_tags],
     }
 
-    most_popular_posts = Post.objects.popular().select_related('author').prefetch_related('tags').fetch_with_comments_count()[:5]
+    most_popular_posts = Post.objects.popular().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()[:5]
 
     most_popular_tags = Tag.objects.popular()[:5]
 
