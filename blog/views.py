@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from blog.models import Post, Tag
-from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 
 
@@ -28,9 +27,9 @@ def tag_serialize(tag):
 
 def index(request):
 
-    fresh_posts = Post.objects.fresh().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()
+    fresh_posts = Post.objects.fresh().select_related('author').prefetch_tags().fetch_with_comments_count()
 
-    popular_posts = Post.objects.popular().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()
+    popular_posts = Post.objects.popular().select_related('author').prefetch_tags().fetch_with_comments_count()
 
     most_fresh_posts = list(fresh_posts)[-5:]
     most_popular_posts = popular_posts[:5]
@@ -72,7 +71,7 @@ def post_detail(request, slug):
         'tags': [tag_serialize(tag) for tag in related_tags],
     }
 
-    most_popular_posts = Post.objects.popular().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()[:5]
+    most_popular_posts = Post.objects.popular().select_related('author').prefetch_tags().fetch_with_comments_count()[:5]
 
     most_popular_tags = Tag.objects.popular()[:5]
 
@@ -89,11 +88,11 @@ def post_detail(request, slug):
 def tag_filter(request, tag_title):
     tag = get_object_or_404(Tag, title=tag_title)
 
-    most_popular_posts = Post.objects.popular().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()[:5]
+    most_popular_posts = Post.objects.popular().select_related('author').prefetch_tags().fetch_with_comments_count()[:5]
 
     most_popular_tags = Tag.objects.popular()[:5]
 
-    related_posts = tag.posts.all().select_related('author').prefetch_related(Prefetch('tags', queryset=Tag.objects.popular())).fetch_with_comments_count()[:20]
+    related_posts = tag.posts.all().select_related('author').prefetch_tags().fetch_with_comments_count()[:20]
 
 
     context = {
