@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_list_or_404
-from blog.models import Comment, Post, Tag
-from django.db.models import Count, Prefetch
+from django.shortcuts import render
+from blog.models import Post, Tag
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 
 
