@@ -15,7 +15,7 @@ def post_serialize(post):
         'published_at': post.published_at,
         'slug': post.slug,
         'tags': [tag_serialize(tag) for tag in post_tags],
-        'first_tag_title': post_tags[0].title,
+        'first_tag_title': post_tags.first().title,
     }
 
 
